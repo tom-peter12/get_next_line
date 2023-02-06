@@ -18,12 +18,12 @@ char	*ft_all_read(int fd)
 	char	*all_read;
 	size_t	read_bytes;
 
-	read_bytes = 0;
+	read_bytes = 1;
 	buff_read = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff_read)
 		return (NULL);
 	all_read = ft_strdup("");
-	while (!ft_strchr(buff_read, '\n'))
+	while (!ft_strchr(buff_read, '\n') && read_bytes != 0)
 	{
 		read_bytes = read(fd, buff_read, BUFFER_SIZE);
 		all_read = ft_strjoin(all_read, buff_read);
@@ -58,14 +58,23 @@ char	*ft_stripped_line(char *stat_chars)
 char	*ft_left_chars(char *extraline)
 {
 	size_t	i;
+	size_t	j;
+	char	*the_rest;
 
 	i = 0;
-	while (extraline[i] != '\n')
-	{
+	j = 0;
+	while (extraline[i] && extraline[i] != '\n')
 		i++;
-		extraline++;
+	the_rest = (char *) malloc(sizeof(char) * (ft_strlen(extraline) - i + 1));
+	if (!the_rest)
+		return (NULL);
+	while (extraline[i])
+	{
+		the_rest[j] = extraline[i];
+		j++;
+		i++;
 	}
-	return (extraline);
+	return (the_rest);
 }
 
 char	*get_next_line(int fd)
