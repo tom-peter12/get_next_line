@@ -12,36 +12,50 @@
 
 #include "get_next_line.h"
 
-char	*ft_all_read(int fd)
+char	*ft_all_read(int fd, char *left_stat)
 {
 	char	*buff_read;
-	char	*all_read;
-	size_t	read_bytes;
+	int		read_bytes;
 
 	read_bytes = 1;
-	buff_read = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	buff_read = (char *) malloc(sizeof(char) * (size_t)(BUFFER_SIZE) + 1);
 	if (!buff_read)
 		return (NULL);
-	all_read = ft_strdup("");
 	while (!ft_strchr(buff_read, '\n') && read_bytes != 0)
 	{
 		read_bytes = read(fd, buff_read, BUFFER_SIZE);
-		all_read = ft_strjoin(all_read, buff_read);
+		if (read_bytes == 0)
+		{
+			break ;
+		}
+		if (read_bytes <= -1)
+		{
+			free(buff_read);
+			return (NULL);
+		}
+		buff_read[read_bytes] = '\0';
+		left_stat = ft_strjoin(left_stat, buff_read);
+		
 	}
-	return (all_read);
+	free(buff_read);
+	return (left_stat);
 }
 
 char	*ft_stripped_line(char *stat_chars)
 {
 	char	*line_stripped;
 	size_t	i;
-	
+
 	i = 0;
-	while (stat_chars && stat_chars[i] != '\n')
+	while (stat_chars[i] && stat_chars[i] != '\n')
+		i++;
+	if (stat_chars[i] == '\n')
 		i++;
 	line_stripped = (char *) malloc(sizeof(char) * (i + 1));
+	if (!line_stripped)
+		return (NULL);
 	i = 0;
-	while (stat_chars && stat_chars[i] != '\n')
+	while (stat_chars[i] && stat_chars[i] != '\n')
 	{
 		line_stripped[i] = stat_chars[i];
 		i++;
@@ -64,6 +78,12 @@ char	*ft_left_chars(char *extraline)
 	i = 0;
 	j = 0;
 	while (extraline[i] && extraline[i] != '\n')
+	{
+		i++;
+	}
+	if (extraline[i] == '\0')
+		return(NULL);
+	if (extraline[i] == '\n')
 		i++;
 	the_rest = (char *) malloc(sizeof(char) * (ft_strlen(extraline) - i + 1));
 	if (!the_rest)
@@ -74,17 +94,21 @@ char	*ft_left_chars(char *extraline)
 		j++;
 		i++;
 	}
+	the_rest[j] = '\0';
+	free(extraline);
 	return (the_rest);
 }
 
 char	*get_next_line(int fd)
 {
-	char			*next_line;
-	static	char	*extra_chars;
+	char		*next_line;
+	static char	*extra_chars;
 
 	if (fd < 0 || BUFFER_SIZE >= INT_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
-	extra_chars = ft_all_read(fd);
+	extra_chars = ft_all_read(fd, extra_chars);
+	if (!extra_chars)
+		return (NULL);
 	next_line = ft_stripped_line(extra_chars);
 	extra_chars = ft_left_chars(extra_chars);
 	return (next_line);
