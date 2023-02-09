@@ -9,14 +9,15 @@ int	main(void)
 	int	n;
 
 	n = 0;
-	while (line)
+	while (1)
 	{
 		line = get_next_line(fd1);
 		if (!line)
 			break;
 		printf("%s", line);
 		free(line);
-		// n++;
+		n++;
 	}
+	free(line);
 	return (0);
 }

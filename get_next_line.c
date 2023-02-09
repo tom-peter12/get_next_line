@@ -82,12 +82,18 @@ char	*ft_left_chars(char *extraline)
 		i++;
 	}
 	if (extraline[i] == '\0')
+	{
+		free(extraline);
 		return(NULL);
+	}
 	if (extraline[i] == '\n')
 		i++;
 	the_rest = (char *) malloc(sizeof(char) * (ft_strlen(extraline) - i + 1));
 	if (!the_rest)
+	{
+		free(extraline);
 		return (NULL);
+	}
 	while (extraline[i])
 	{
 		the_rest[j] = extraline[i];
