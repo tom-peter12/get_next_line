@@ -17,20 +17,18 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*str_j;
 	int		i;
 	int		j;
+
 	if (!s1)
-		s1 = ft_strdup("");
+		s1 = ft_calloc(1, 1);
 	if (!s1 && !s2)
 		return (s1);
 	str_j = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str_j)
 		return (0);
-	i = 0;
+	i = -1;
 	j = 0;
-	while (s1[i])
-	{
+	while (s1[++i])
 		str_j[i] = s1[i];
-		i++;
-	}
 	while (s2[j])
 	{
 		str_j[i] = s2[j];
@@ -72,38 +70,28 @@ char	*ft_strchr(const char *src, int c)
 	return ((char *)str);
 }
 
-char	*ft_strdup(const char *src)
+void	ft_bzero(void *s, size_t n)
 {
-	char	*duplicated;
-	int		i;
+	char	*str;
+	size_t	i;
 
+	str = (char *)s;
 	i = 0;
-	duplicated = (char *)malloc((ft_strlen(src) * sizeof(char)) + 1);
-	if (!duplicated)
-		return (NULL);
-	while (src[i] != '\0')
+	while (i < n)
 	{
-		duplicated[i] = src[i];
+		str[i] = '\0';
 		i++;
 	}
-	duplicated[i] = '\0';
-	return (duplicated);
 }
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
+void	*ft_calloc(size_t elementCount, size_t elementSize)
 {
-	unsigned char		*p;
-	unsigned char		*q;
+	char	*res;
 
-	p = (unsigned char *) s1;
-	q = (unsigned char *) s2;
-	if (n == 0)
-		return (0);
-	while ((*p == *q) && n - 1 > 0)
-	{
-		p++;
-		q++;
-		n--;
-	}
-	return ((int)(*p - *q));
+	res = malloc(elementSize * elementCount);
+	if (!res)
+		return (NULL);
+	ft_bzero(res, elementSize * elementCount);
+	return (res);
 }
+
