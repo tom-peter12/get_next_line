@@ -18,7 +18,7 @@ char	*ft_all_read(int fd, char *left_stat)
 	int		read_bytes;
 
 	read_bytes = 1;
-	buff_read = (char *) malloc(sizeof(char) * (size_t)BUFFER_SIZE + 1);
+	buff_read = (char *)ft_calloc((sizeof(char) * (size_t)BUFFER_SIZE + 1), 1);
 	if (!buff_read)
 		return (NULL);
 	while (!ft_strchr(buff_read, '\n') && read_bytes != 0)
