@@ -92,7 +92,7 @@ char	*ft_left_chars(char *extraline)
 char	*get_next_line(int fd)
 {
 	char		*next_line;
-	static char	*extra_chars[1024];
+	static char	*extra_chars[10240];
 
 	if (fd < 0 || BUFFER_SIZE > INT_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
